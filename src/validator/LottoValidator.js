@@ -32,6 +32,14 @@ class LottoValidator {
 
     numbers.forEach(number => this.#validateSingleNumber(number));
   }
+
+  static validateBonusNumber(bonusNumber, winningNumbers) {
+    this.#validateSingleNumber(bonusNumber);
+
+    if (winningNumbers.includes(bonusNumber)) {
+      throw new Error(`${ERROR_MESSAGES.PREFIX} ${ERROR_MESSAGES.DUPLICATE_BONUS_NUMBER}`);
+    }
+  }
 }
 
 export default LottoValidator;

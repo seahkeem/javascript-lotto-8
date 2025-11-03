@@ -17,4 +17,6 @@ export const ERROR_MESSAGES = Object.freeze({
 export const OUTPUT_MESSAGES = Object.freeze({
   AMOUNT_INPUT: '구입금액을 입력해 주세요.\n',
   PURCHASE_COUNT: (count) => `\n${count}개를 구매했습니다.`,
+  WINNING_NUMBERS_INPUT: '\n당첨 번호를 입력해 주세요.\n',
+  BONUS_NUMBER_INPUT: '\n보너스 번호를 입력해 주세요.\n',
 });
