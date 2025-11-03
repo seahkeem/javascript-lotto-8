@@ -15,6 +15,7 @@ const mockRandoms = (numbers) => {
   MissionUtils.Random.pickUniqueNumbersInRange = jest.fn();
   numbers.reduce((acc, number) => {
     return acc.mockReturnValueOnce(number);
+  
   }, MissionUtils.Random.pickUniqueNumbersInRange);
 };
 
@@ -24,15 +25,15 @@ const getLogSpy = () => {
   return logSpy;
 };
 
-const runException = async (input) => {
+const RANDOM_NUMBERS_TO_END = [1, 2, 3, 4, 5, 6];
+const INPUT_NUMBERS_TO_END = ["1000", "1,2,3,4,5,6", "7"];
+
+const runException = async (inputs) => {
   // given
   const logSpy = getLogSpy();
 
-  const RANDOM_NUMBERS_TO_END = [1, 2, 3, 4, 5, 6];
-  const INPUT_NUMBERS_TO_END = ["1000", "1,2,3,4,5,6", "7"];
-
   mockRandoms([RANDOM_NUMBERS_TO_END]);
-  mockQuestions([input, ...INPUT_NUMBERS_TO_END]);
+  mockQuestions([...inputs, ...INPUT_NUMBERS_TO_END]);
 
   // when
   const app = new App();
@@ -91,7 +92,29 @@ describe("로또 테스트", () => {
     });
   });
 
-  test("예외 테스트", async () => {
-    await runException("1000j");
+  test("예외 테스트 (구입 금액에 문자 입력)", async () => {
+    await runException(["1000j"]);
+  });
+
+  test("예외 테스트 (구입 금액이 1000원 단위가 아닐 때)", async () => {
+    await runException(["1234"]);
+  });
+
+  test("예외 테스트 (당첨 번호 개수가 6개가 아닐 때)", async () => {
+    await runException(["1000", "1,2,3,4,5"]);
+  });
+
+  test("예외 테스트 (당첨 번호에 중복이 있을 때)", async () => {
+    await runException(["1000", "1,2,3,4,5,5"]);
+  });
+
+  test("예외 테스트 (보너스 번호가 당첨 번호와 중복될 때)", async () => {
+    const WINNING_NUMBERS = "1,2,3,4,5,6";
+    await runException(["1000", WINNING_NUMBERS, "6"]); 
+  });
+
+  test("예외 테스트 (보너스 번호가 범위(1~45)를 벗어날 때)", async () => {
+    const WINNING_NUMBERS = "1,2,3,4,5,6";
+    await runException(["1000", WINNING_NUMBERS, "46"]); 
   });
 });
