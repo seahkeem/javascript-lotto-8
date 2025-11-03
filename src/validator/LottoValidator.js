@@ -20,6 +20,18 @@ class LottoValidator {
     }
   }
 
+  static validateLottoNumbers(numbers) {
+    if (numbers.length !== LOTTO_RULES.COUNT) {
+      throw new Error(`${ERROR_MESSAGES.PREFIX} ${ERROR_MESSAGES.INVALID_NUMBER_COUNT}`);
+    }
+
+    const uniqueNumbers = new Set(numbers);
+    if (uniqueNumbers.size !== LOTTO_RULES.COUNT) {
+      throw new Error(`${ERROR_MESSAGES.PREFIX} ${ERROR_MESSAGES.DUPLICATE_NUMBERS}`);
+    }
+
+    numbers.forEach(number => this.#validateSingleNumber(number));
+  }
 }
 
 export default LottoValidator;
