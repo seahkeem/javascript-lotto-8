@@ -3,6 +3,7 @@ import InputView from './view/InputView.js';
 import OutputView from './view/OutputView.js';
 import Lotto from './Lotto.js';
 import LottoValidator from './validator/LottoValidator.js';
+import LottoResult from './LottoResult.js';
 import { LOTTO_RULES } from "./constants/messages.js";
 
 class App {
@@ -30,7 +31,9 @@ class App {
       this.#outputView.printLottos(this.#lottos);
 
       if (await this.#handleWinningNumbers()) {
-        await this.#handleBonusNumber();
+        if (await this.#handleBonusNumber()) {
+          this.#showResult();
+        }
       }
     }
   }
@@ -75,7 +78,6 @@ class App {
   async #handleBonusNumber() {
     const { success, result: bonusNumber } = await this.#handleInput(async () => {
       const bonus = await this.#inputView.readBonusNumber();
-
       LottoValidator.validateBonusNumber(bonus, this.#winningNumbers);
       return bonus;
     });
@@ -99,6 +101,20 @@ class App {
 
       this.#lottos.push(new Lotto(numbers));
     }
+  }
+
+  #showResult() {
+    const lottoResult = new LottoResult(
+      this.#lottos,
+      this.#winningNumbers,
+      this.#bonusNumber,
+      this.#purchaseAmount
+    );
+
+    const results = lottoResult.getResults();
+    const returnRate = lottoResult.getReturnRate();
+
+    this.#outputView.printResults(results, returnRate);
   }
 }
 
