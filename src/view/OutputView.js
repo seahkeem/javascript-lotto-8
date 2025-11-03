@@ -23,7 +23,7 @@ class OutputView {
       Console.print(`${OUTPUT_MESSAGES[messageKey]}${count}개`);
     });
 
-    Console.print(OUTPUT_MESSAGES.RETURN_RATE(returnRate.toFixed(2)));
+    Console.print(OUTPUT_MESSAGES.RETURN_RATE(returnRate.toFixed(1)));
   }
 
   #getOutputMessageKey(rankKey) {
